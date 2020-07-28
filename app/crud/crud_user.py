@@ -16,7 +16,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         # user = self.get_by_email(db, email=obj_in.email)
         # if not user:
         #     return None
-        print('>>>cqalled>>>>')
+    
         db_obj = User(
             email=obj_in.email,
             hashed_password=get_password_hash(obj_in.password),
