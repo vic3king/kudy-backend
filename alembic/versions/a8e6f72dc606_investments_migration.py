@@ -50,9 +50,24 @@ def upgrade():
         "invest",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("amount", sa.Integer(), nullable=False),
+        sa.Column("returns", sa.Integer(), nullable=True),
+        sa.Column("potential_returns", sa.Integer(), nullable=False),
         sa.Column("duration", sa.String(), nullable=False),
         sa.Column("investment_id", sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(['investment_id'], ['investment.id']),
+        sa.Column("owner_id", sa.Integer(), nullable=True),
+        sa.ForeignKeyConstraint(["owner_id"], ["user.id"],),
+        sa.Column("created_at", sa.String(), nullable=True),
+        sa.Column("updated_at", sa.String(), nullable=True),
+        sa.PrimaryKeyConstraint("id"),
+    )
+
+    op.create_table(
+        "transaction",
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("amount", sa.Integer(), nullable=False),
+        sa.Column("reference", sa.String(), nullable=False),
+        sa.Column('transaction_type', sa.Enum('withdraw', 'deposit', 'debit', 'credit','generic', name='ReferenceTypes')),
         sa.Column("owner_id", sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(["owner_id"], ["user.id"],),
         sa.Column("created_at", sa.String(), nullable=True),
@@ -72,4 +87,5 @@ def downgrade():
     op.drop_table("investment")
     op.drop_table("wallet")
     op.drop_table("invest")
+    op.drop_table("transaction")
 

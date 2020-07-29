@@ -45,14 +45,23 @@ def wallet_top_up(
     if wallet:
         wallet.balance += wallet_in.amount
         db.commit()
-        return wallet
 
-    if not wallet:
-        del wallet_in.owner_id
-        del wallet_in.amount
-        wallet_in.balance = 0
-        wallet = crud.wallet.create_with_owner(
-            db=db, obj_in=wallet_in, owner_id=current_user.id
+        crud.transaction.create_with_owner(
+            db=db,
+            obj_in={
+                "amount": wallet_in.amount,
+                "reference": "account top up",
+                "transaction_type": "deposit",
+            },
+            owner_id=current_user.id,
         )
         return wallet
 
+    if not wallet:
+        # TODO: try to figure out a better way to handle this.
+        del wallet_in.owner_id
+        wallet = crud.wallet.create_with_owner(
+            db=db, obj_in={"balance": wallet_in.amount}, owner_id=current_user.id
+        )
+        db.commit()
+        return wallet

@@ -23,8 +23,8 @@ class InvestmentCreate(InvestmentBase):
 class InvestmentUpdate(InvestmentBase):
     name: Optional[str] = None
     description: Optional[str] = None
-    rate: Optional[str] = None
-    lock_period: Optional[str] = None
+    rate: Optional[int] = None
+    lock_period: Optional[int] = None
 
 
 # Properties shared by models stored in DB
@@ -59,6 +59,9 @@ class InvestBase(BaseModel):
     amount: int
     duration: int
     investment_id: int
+    returns: Optional[int] = 0
+    potential_returns: Optional[int] = 0
+
 
 
 # Properties to receive on Invest creation
@@ -88,3 +91,7 @@ class Invest(InvestInDBBase):
 # Properties properties stored in DB
 class InvestInDB(InvestInDBBase):
     pass
+
+class InvestmentWithdraw(BaseModel):
+    # owner_id: int
+    investment_id: int
