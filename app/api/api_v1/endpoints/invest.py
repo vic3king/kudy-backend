@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 @router.get("/history")
-def read_investments(
+def read_investments_history(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
@@ -28,7 +28,7 @@ def read_investments(
 
 
 @router.post("/invest", response_model=schemas.Invest)
-def create_investment(
+def invest(
     *,
     db: Session = Depends(deps.get_db),
     invest_in: schemas.InvestCreate,
@@ -52,9 +52,15 @@ def create_investment(
 
     profit = invest_in.amount * (investment.rate / 100)
     potential_return = invest_in.amount + profit
-    invest_in.potential_returns = potential_return
     invest = crud.invest.create_with_owner(
-        db=db, obj_in=invest_in, owner_id=current_user.id
+        db=db,
+        obj_in={
+            "potential_returns": potential_return,
+            "amount": invest_in.amount,
+            "duration": invest_in.duration,
+            "investment_id": invest_in.investment_id,
+        },
+        owner_id=current_user.id,
     )
 
     wallet.balance = wallet.balance - invest_in.amount
@@ -85,7 +91,6 @@ def investment_withdraw(
     """
 
     wallet = crud.wallet.get_by_owner_id(db=db, owner_id=current_user.id)
-
 
     investment = crud.invest.get_user_investment(
         db=db, investment_in=investment_in, owner_id=current_user.id

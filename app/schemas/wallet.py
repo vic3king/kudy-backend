@@ -10,7 +10,7 @@ class WalletBase(BaseModel):
 
 
 # Properties to receive on Wallet creation
-class WalletCreate(WalletBase):
+class WalletCreate(BaseModel):
     amount: int
 
 

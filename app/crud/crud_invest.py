@@ -5,8 +5,8 @@ from sqlalchemy.orm import Session
 
 from app.crud.base import CRUDBase
 from app.models.invest import Invest
-from app.models.wallet import Wallet
-from app.schemas.investment import InvestCreate, InvestUpdate, InvestmentWithdraw
+from app.models.investment import Investment
+from app.schemas.invest import InvestCreate, InvestUpdate, InvestmentWithdraw, InvestmentHistory
 
 
 class CRUDInvest(CRUDBase[Invest, InvestCreate, InvestUpdate]):
@@ -22,7 +22,7 @@ class CRUDInvest(CRUDBase[Invest, InvestCreate, InvestUpdate]):
 
     def get_multi_by_owner(
         self, db: Session, *, owner_id: int, skip: int = 0, limit: int = 100
-    ) -> List[Invest]:
+    ) -> List[InvestmentHistory]:
         return (
             db.query(self.model)
             .filter(Invest.owner_id == owner_id)
@@ -34,7 +34,7 @@ class CRUDInvest(CRUDBase[Invest, InvestCreate, InvestUpdate]):
 
     def get_user_investment(
         self, db: Session, *, owner_id: int, investment_in: InvestmentWithdraw
-    ) -> Optional[Wallet]:
+    ) -> Optional[Invest]:
         return (
             db.query(Invest)
             .filter(

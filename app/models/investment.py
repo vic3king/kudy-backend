@@ -5,6 +5,8 @@ from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
 
+if TYPE_CHECKING:
+    from .invest import Invest  # noqa: F401
 
 class Investment(Base):
     id = Column(Integer, primary_key=True, index=True)

@@ -55,11 +55,10 @@ def wallet_top_up(
             },
             owner_id=current_user.id,
         )
+
         return wallet
 
     if not wallet:
-        # TODO: try to figure out a better way to handle this.
-        del wallet_in.owner_id
         wallet = crud.wallet.create_with_owner(
             db=db, obj_in={"balance": wallet_in.amount}, owner_id=current_user.id
         )

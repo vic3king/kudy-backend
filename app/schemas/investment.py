@@ -1,4 +1,5 @@
-from typing import Optional
+from typing import Optional, Any
+import datetime
 
 from pydantic import BaseModel
 
@@ -9,7 +10,6 @@ class InvestmentBase(BaseModel):
     description: str
     rate: int
     lock_period: int
-
 
 # Properties to receive on Investment creation
 class InvestmentCreate(InvestmentBase):
@@ -47,51 +47,7 @@ class Investment(InvestmentInDBBase):
     lock_period: int
 
 
-# Properties properties stored in DB
-class InvestmentInDB(InvestmentInDBBase):
-    pass
+# # Properties properties stored in DB
+# class InvestmentInDB(InvestmentInDBBase):
+#     pass
 
-
-# Users Invest
-
-# Shared properties
-class InvestBase(BaseModel):
-    amount: int
-    duration: int
-    investment_id: int
-    returns: Optional[int] = 0
-    potential_returns: Optional[int] = 0
-
-
-
-# Properties to receive on Invest creation
-class InvestCreate(InvestBase):
-    pass
-
-
-# Properties to receive on Invest update
-class InvestUpdate(InvestBase):
-    pass
-
-
-# Properties shared by models stored in DB
-class InvestInDBBase(InvestBase):
-    id: int
-    owner_id: int
-
-    class Config:
-        orm_mode = True
-
-
-# Properties to return to client
-class Invest(InvestInDBBase):
-    pass
-
-
-# Properties properties stored in DB
-class InvestInDB(InvestInDBBase):
-    pass
-
-class InvestmentWithdraw(BaseModel):
-    # owner_id: int
-    investment_id: int
